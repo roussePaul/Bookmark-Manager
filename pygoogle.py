@@ -99,7 +99,7 @@ class pygoogle:
                     'safe' : self.safe, 
                     'filter' : self.filter,    
                     'hl'    : self.hl,
-                    'userip' : '82.233.241.14'
+                    'userip' : '82.233.241.15'
                     }
             self.logger.debug('search: "%s" page# : %s'%(self.query, page))
             q = urllib.parse.urlencode(args)
