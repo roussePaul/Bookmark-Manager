@@ -10,7 +10,7 @@ from yahoo import getNbreResults
 from bdd import *
 
 
-def getTags(url):
+def queryTags(url):
     
     param = { 'q' : 'select * from contentanalysis.analyze where url=\'' + url +'\';', 'format' : 'json', 'diagnostics' : 'true'}
     query = urllib.parse.urlencode(param)
@@ -36,10 +36,19 @@ def getTagOccurence(tag):
         putTag(tag,n)
     return n
     
+def getTagsOccurence(tag1,tag2):
+    n = getTags(tag1,tag2)
+    if n<0:
+        tag=tag1 + ' ' + tag2
+        print('Query "'+tag+'"...')
+        n = getNbreResults(tag)
+        putTags(tag1,tag2,n)
+    return n
+    
 def distanceTags(tag1,tag2):
     n1 = getTagOccurence(tag1)
     n2 = getTagOccurence(tag2)
-    n12 = getTagOccurence(tag1 + ' ' + tag2)
+    n12 = getTagsOccurence(tag1,tag2)
     
     r = 1- 2*n12/(n1 + n2)
     dist =  r/(1.01-r)
@@ -68,22 +77,18 @@ def distancePage(page1, page2):
     
 initBDD()
 
-url1 = 'http://edition.cnn.com/2011/11/11/world/europe/greece-main/index.html'
-url2 = 'http://edition.cnn.com/2014/06/10/business/greece-crisis-enterpreneurs/index.html'
-url3 = 'http://edition.cnn.com/2014/06/27/world/africa/world-fragile-nations/index.html'
+url2 = 'http://edition.cnn.com/2011/11/11/world/europe/greece-main/index.html'
+url1 = 'http://edition.cnn.com/2014/06/10/business/greece-crisis-enterpreneurs/index.html'
+url1 = 'http://www.nydailynews.com/entertainment/gossip/angel-haze-confirms-ireland-baldwin-romance-article-1.1847527'
 
-url2 = url1
 
-p1 = getTags(url1)
-p2 = getTags(url2)
-p3 = getTags(url3)
+p1 = queryTags(url1)
+p2 = queryTags(url2)
 
 pp = pprint.PrettyPrinter(indent=4)
 
 
 print('Distance page 1 et 2 = '+ str(distancePage(p1,p2)))
-print('Distance page 3 et 2 = '+ str(distancePage(p3,p2)))
-print('Distance page 1 et 3 = '+ str(distancePage(p1,p3)))
 
 
 closeBDD()
