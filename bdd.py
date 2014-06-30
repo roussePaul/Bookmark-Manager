@@ -2,6 +2,7 @@ from ZODB.FileStorage import FileStorage
 from ZODB.DB import DB
 import transaction
 
+# Classe de la base de donnée
 db = 0
 class MyZODB(object):
     def __init__(self, path):
@@ -24,11 +25,13 @@ def closeBDD():
     transaction.commit()
     db.close()
 
+# Ajoute un tag unique à la BDD associé au nombre de résultats de la requête
 def putTag(tag,n):
     global db
     root = db.dbroot
     root[tag] = n
 
+# Ajoute un double tag associé à la requête des 2 tags
 def putTags(t1,t2,n):
     global db
     root = db.dbroot
@@ -52,3 +55,22 @@ def getTags(t1,t2):
         return root[(t2,t1)]
     else:
         return -1
+
+        
+# Renvoi une liste de tag unique
+def getListTag():
+    global db
+    root = db.dbroot
+    
+    list = [tag for tag in root.keys() if not isinstance(tag, tuple)]
+    
+    return list
+    
+# Renvoi une liste de tag double
+def getListTags():
+    global db
+    root = db.dbroot
+    
+    list = [tag for tag in root.keys() if isinstance(tag, tuple)]
+    
+    return list
